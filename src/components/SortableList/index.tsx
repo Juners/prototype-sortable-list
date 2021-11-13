@@ -73,12 +73,8 @@ function SortableList<T>({ items, dragItemConfig }: SortableListProps<T>) {
           }}
           onDragExit={(ev) => {
             ev.preventDefault();
-            (
-              ev.currentTarget.querySelector("hr.top") as HTMLElement
-            ).style.display = "none";
-            (
-              ev.currentTarget.querySelector("hr.bot") as HTMLElement
-            ).style.display = "none";
+            switchDisplay(ev.currentTarget, "hr.bot", false);
+            switchDisplay(ev.currentTarget, "hr.top", false);
           }}
           onDrop={(ev) => {
             ev.preventDefault();
@@ -99,7 +95,7 @@ function SortableList<T>({ items, dragItemConfig }: SortableListProps<T>) {
             key={i}
             draggable={true}
             onDragStart={(ev) => {
-              ev.currentTarget.style.opacity = "50%";
+              ev.currentTarget.classList.add("item-dragged");
               ev.dataTransfer.setData("application/json", `${i}`);
               ev.dataTransfer.effectAllowed = "move";
               ev.dataTransfer.setDragImage(
@@ -110,7 +106,7 @@ function SortableList<T>({ items, dragItemConfig }: SortableListProps<T>) {
             }}
             onDragEnd={(ev) => {
               ev.preventDefault();
-              ev.currentTarget.style.opacity = "100%";
+              ev.currentTarget.classList.remove("item-dragged");
               ev.currentTarget.parentElement?.parentElement
                 ?.querySelectorAll("hr")
                 .forEach((el) => ((el as HTMLElement).style.display = "none"));
